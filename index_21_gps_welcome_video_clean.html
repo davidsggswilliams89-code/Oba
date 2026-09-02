@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OBA REAL ESTATE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#eef1f4;padding-top:60px;color:#1d1d1d}
+.top-marquee{background:#111;position:fixed;top:0;left:0;width:100%;height:30px;display:flex;align-items:center;overflow:hidden;z-index:3000}
+.logo{height:30px;width:48px;margin:0;padding:0;object-fit:cover;background:#111;z-index:10;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transform:scale(1.18);transform-origin:left center}
+.marquee-wrapper{position:absolute;width:100%;overflow:hidden;z-index:1}
+.marquee-text{display:inline-block;width:max-content;font-size:15px;font-weight:bold;white-space:nowrap;animation:move 14s linear infinite;color:#fff;margin-left:60px}
+@keyframes move{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+.admin-icon{position:absolute;right:0;width:30px;height:30px;background:#222;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;z-index:10}
+.category-bar{position:fixed;top:30px;left:0;width:100%;height:30px;display:flex;align-items:center;overflow-x:auto;z-index:2000;background:linear-gradient(90deg,#123b68,#0c2745);box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.category-bar::-webkit-scrollbar{display:none}
+.category-btn{color:#fff;padding:2px 9px;margin:4px 4px;border-radius:18px;white-space:nowrap;cursor:pointer;font-size:14px;font-weight:600;line-height:18px;transition:.2s}
+.category-btn.active{background:#fff;color:#123b68;padding:2px 9px;border-radius:18px;box-shadow:none}
+.view{display:none;padding:0 10px 12px}.active-view{display:block}
+.card{background:#fff;border-radius:14px;padding:7px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.img-wrap{position:relative;overflow:hidden;border-radius:12px}
+.new-badge{position:absolute;top:8px;left:8px;background:#123b68;color:#fff;font-size:11px;padding:5px 7px;border-radius:6px;z-index:10;font-weight:bold}
+.carousel{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;width:100%;aspect-ratio:9/16;border-radius:12px;-webkit-overflow-scrolling:touch}
+.carousel::-webkit-scrollbar{display:none}
+.carousel img,.video-container{flex:0 0 100%;width:100%;aspect-ratio:9/16;scroll-snap-align:start;border-radius:12px}
+.carousel img{height:auto;object-fit:cover;display:block;background:#ddd}
+.video-container{position:relative;overflow:hidden;background:#000}
+.video-container video{width:100%;height:100%;object-fit:cover;display:block}
+.video-sound-btn{position:absolute;left:12px;bottom:12px;width:38px;height:38px;border:none;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:20;backdrop-filter:blur(4px)}
+.video-sound-btn:active{transform:scale(.9)}
+.dots{text-align:center;margin-top:5px}.dot{height:8px;width:8px;margin:0 3px;background:#bbb;border-radius:50%;display:inline-block;cursor:pointer}.dot.active{background:#123b68}
+.property-price{font-size:20px;font-weight:800;color:#123b68;text-align:center;padding:8px 4px 2px}
+.property-name{font-size:18px;font-weight:700;margin:6px 2px 2px;text-align:center}
+.property-location{font-size:13px;color:#666;text-align:center;margin:3px 2px}
+.property-description{font-size:13px;color:#444;line-height:1.45;margin:6px 3px;text-align:center}
+.contact-btn{background:#25D366;color:#fff;border:none;width:100%;padding:9px;margin-top:6px;border-radius:10px;font-weight:bold;font-size:16px;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer}
+.contact-btn span{font-size:18px}
+input,select,textarea{width:100%;max-width:340px;padding:9px;margin:4px 0;border:1px solid #ccc;border-radius:8px;font-family:inherit;font-size:13px}
+textarea{min-height:75px;resize:vertical}
+.btn{width:100%;max-width:340px;padding:10px;background:#123b68;color:#fff;border:none;border-radius:8px;margin-top:5px;cursor:pointer;font-weight:600}
+.btn.green{background:#25D366}.btn.red{background:#d71920}.btn.gray{background:#555}
+.location-box{width:100%;max-width:340px;margin:5px 0 2px;padding:9px;background:#f5f7fa;border:1px solid #d9dee5;border-radius:9px;font-size:12px;color:#444;text-align:center}
+.location-box strong{color:#123b68}
+.location-status{margin-top:4px;font-size:11px;line-height:1.35}
+.map-btn{display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;background:#123b68;color:#fff;width:100%;padding:9px;margin-top:6px;border-radius:10px;font-weight:bold;font-size:14px}
+.map-btn.disabled{background:#999;pointer-events:none}
+
+.admin-login-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:6000;align-items:center;justify-content:center;padding:18px}
+.admin-login-modal.show{display:flex}
+.admin-login-card{position:relative;width:100%;max-width:360px;background:#fff;border-radius:18px;padding:25px 18px 20px;box-shadow:0 10px 35px rgba(0,0,0,.25);text-align:center}
+.admin-login-card h2{margin:6px 0 2px;color:#123b68;font-size:21px}
+.admin-login-card p{margin:0 0 15px;color:#666;font-size:13px}
+.admin-login-icon{font-size:34px}
+.admin-login-close{position:absolute;right:10px;top:8px;width:34px;height:34px;border:0;border-radius:50%;background:#eee;color:#333;font-size:25px;line-height:30px;cursor:pointer}
+.admin-login-card input{max-width:none;width:100%;margin:6px 0;padding:12px;border-radius:9px}
+.password-wrap{position:relative;width:100%}
+.password-wrap input{padding-right:65px}
+.password-wrap button{position:absolute;right:7px;top:11px;border:0;background:transparent;color:#123b68;font-weight:bold;cursor:pointer}
+.admin-login-card .btn{max-width:none;margin-top:10px;padding:12px}
+.forgot-btn{border:0;background:none;color:#123b68;font-size:12px;margin-top:12px;cursor:pointer}
+.admin-login-message{min-height:18px;margin-top:9px;font-size:12px;color:#d71920;line-height:1.35}
+.admin{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:5000;padding:7px 10px;overflow-y:auto;flex-direction:column;align-items:center}
+.admin h2,.admin h3{width:100%;max-width:340px;margin:7px 0 4px}.admin h2{font-size:20px;text-align:center}.admin h3{font-size:15px}
+.admin hr{width:100%;max-width:340px;margin:8px 0;border:0;border-top:1px solid #ddd}
+.admin .form-group{width:100%;max-width:340px;margin:3px 0}.admin label{display:block;font-size:12px;font-weight:bold;color:#222;margin-bottom:2px}
+.admin-item{display:flex;align-items:center;gap:8px;background:#f2f2f2;padding:7px;margin:5px 0;border-radius:7px;width:100%;max-width:340px}.admin-item img{width:42px;height:42px;object-fit:cover;border-radius:5px}.admin-item .meta{flex:1;font-size:12px}.delete-btn{background:red;color:#fff;border:none;padding:7px 8px;border-radius:6px;cursor:pointer}
+.home-hero{text-align:center;padding:15px 8px 8px}.home-hero h1{margin:5px 0;color:#123b68;font-size:27px}.home-hero p{margin:7px 0;color:#555;line-height:1.5}
+.info-title{text-align:center;color:#123b68}.home-contact{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}.social-btn{display:flex;align-items:center;justify-content:center;padding:8px 13px;border-radius:18px;color:#fff;font-size:12px;font-weight:600;text-decoration:none}.wa{background:#25D366}.phone{background:#123b68}
+.empty{text-align:center;padding:22px 8px;color:#666}.empty strong{display:block;font-size:17px;color:#123b68;margin-bottom:4px}
+.welcome-card{background:#fff;border-radius:14px;padding:7px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.welcome-video-wrap{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;border-radius:12px;background:#111}
+.welcome-video-wrap video{width:100%;height:100%;object-fit:cover;display:block}
+.welcome-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#fff;background:#111;font-weight:600}
+.welcome-label{text-align:center;color:#123b68;font-size:18px;font-weight:800;margin:8px 3px 3px}
+
+</style>
+</head>
+<body>
+
+<div class="top-marquee">
+  <img id="obaLogo" src="logo.png" class="logo" alt="OBA Real Estate logo" title="OBA Real Estate" onerror="this.style.visibility='hidden'">
+  <div class="marquee-wrapper"><div class="marquee-text">OBA REAL ESTATE 🏠 • PROPERTIES FOR RENT • BUILDINGS FOR SALE • UNCOMPLETED BUILDINGS • FIND YOUR NEXT PROPERTY WITH OBA •</div></div>
+</div>
+
+<div class="category-bar" id="categoryBar"></div>
+
+<div id="homeView" class="view active-view">
+  <div class="welcome-card">
+    <div id="welcomeVideoArea" class="welcome-video-wrap">
+      <div class="welcome-placeholder">Welcome video will appear here.</div>
+    </div>
+    <div class="welcome-label">WELCOME TO OBA REAL ESTATE</div>
+  </div>
+  <div class="card home-hero">
+    <h1>OBA REAL ESTATE 🏠</h1>
+    <p>Your trusted property agent for house rent, land sales, valuations and estate management. Browse our latest properties and contact us directly for enquiries, inspections and transactions.</p>
+    <hr>
+    <h3 class="info-title">Our Property Categories</h3>
+    <p>🏠 <strong>Rent</strong> — homes and other properties available for rent.</p>
+    <p>🏗️ <strong>Uncompleted Buildings</strong> — unfinished properties available for purchase.</p>
+    <p>🏡 <strong>For Sale</strong> — completed properties available for purchase.</p>
+    <hr>
+    <h3 class="info-title">AA BAKURA GLOBAL SERVICES</h3>
+    <p><strong>Property Agent</strong></p>
+    <p>🏠 House Rent • 🌳 Land Sales • 📋 Valuations • 🏢 Estate Management</p>
+    <p>📞 <strong>Phone:</strong> <a href="tel:+2348030809200">08030809200</a></p>
+    <p>✉️ <strong>Email:</strong> <a href="mailto:abubakura29@gmail.com">abubakura29@gmail.com</a></p>
+    <p>📍 <strong>Address:</strong> No 2 Unguwar Dallatu, Opposite Motor Park, Near Rattawo Office, Tashar Yan Kanta, Gusau, Zamfara State</p>
+    <div class="home-contact">
+      <a class="social-btn wa" href="https://wa.me/2348030809200" target="_blank">💬 WhatsApp</a>
+      <a class="social-btn phone" href="tel:+2348030809200">📞 Call Now</a>
+      <a class="social-btn phone" href="mailto:abubakura29@gmail.com">✉️ Email</a>
+    </div>
+  </div>
+</div>
+
+
+<div id="adminLoginModal" class="admin-login-modal" aria-hidden="true">
+  <div class="admin-login-card">
+    <button id="closeAdminLogin" class="admin-login-close" type="button" aria-label="Close">×</button>
+    <div class="admin-login-icon">🔐</div>
+    <h2>OBA REAL ESTATE</h2>
+    <p>Admin Login</p>
+    <form id="adminLoginForm">
+      <input id="adminEmail" type="email" autocomplete="username" placeholder="Admin email" required>
+      <div class="password-wrap">
+        <input id="adminPassword" type="password" autocomplete="current-password" placeholder="Password" required>
+        <button id="toggleAdminPassword" type="button">Show</button>
+      </div>
+      <button id="adminLoginSubmit" class="btn" type="submit">LOGIN</button>
+      <button id="forgotAdminPassword" class="forgot-btn" type="button">Forgot password?</button>
+      <div id="adminLoginMessage" class="admin-login-message"></div>
+    </form>
+  </div>
+</div>
+
+<div id="adminPanel" class="admin">
+  <h2>OBA REAL ESTATE — ADMIN</h2>
+
+  <h3>Add Property</h3>
+  <div class="form-group"><label>Property Name / Title</label><input id="aName" placeholder="e.g. 3 Bedroom House in Gusau"></div>
+  <div class="form-group"><label>Category</label><select id="aCategory"></select></div>
+  <div class="form-group"><label>Price</label><input id="aPrice" placeholder="e.g. ₦25,000,000"></div>
+  <div class="form-group"><label>Location</label><input id="aLocation" placeholder="e.g. Gusau, Zamfara State"></div>
+  <div class="location-box">
+    <strong>📍 Exact Property GPS Location</strong>
+    <div id="gpsStatus" class="location-status">Not scanned yet.</div>
+  </div>
+  <button id="scanLocationBtn" class="btn" type="button" onclick="scanPropertyLocation()">📍 Scan Exact Location</button>
+  <div class="form-group"><label>Description</label><textarea id="aDescription" placeholder="Bedrooms, land size, condition, features, etc."></textarea></div>
+  <button class="btn" onclick="uploadMedia()">📷🎥 Upload Property Images / Videos</button>
+  <button class="btn green" onclick="addProperty()">Save Property</button>
+
+  <hr>
+  <h3>Add Category</h3>
+  <div class="form-group"><input id="newCat" placeholder="New category name"></div>
+  <button class="btn" onclick="addCategory()">Add Category</button>
+
+  <hr>
+  <h3>Delete Category</h3>
+  <div class="form-group"><select id="catDelete"></select></div>
+  <button class="btn red" onclick="deleteCategory()">Delete Category</button>
+
+  <hr>
+  <h3>Delete Property</h3>
+  <div class="form-group"><select id="delCat" onchange="loadDelete()"></select></div>
+  <div id="delList"></div>
+
+  <hr>
+  <button class="btn gray" onclick="logoutAdmin()">Logout</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDognfwb0uDi9uxUIoiwCDs1GWtAE2WL-Y",
+  authDomain: "obaestate-32236.firebaseapp.com",
+  projectId: "obaestate-32236",
+  storageBucket: "obaestate-32236.firebasestorage.app",
+  messagingSenderId: "357559655668",
+  appId: "1:357559655668:web:7dfd8eefc730a814cd52a1"
+};
+
+try {
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+
+  window.db = db;
+  window.auth = auth;
+  window.fb = { collection, addDoc, getDocs, deleteDoc, doc, getDoc, setDoc };
+  window.firebaseSignIn = signInWithEmailAndPassword;
+  window.firebaseSignOut = signOut;
+  window.firebasePasswordReset = sendPasswordResetEmail;
+
+  window.firebaseReady = Promise.resolve({ db, auth });
+
+  onAuthStateChanged(auth, user => {
+    window.firebaseAdminUser = user || null;
+    // IMPORTANT: Do not automatically open the admin panel on refresh.
+    // Firebase may restore a previous session, but the UI remains locked
+    // until the admin explicitly opens the lock and logs in.
+    if (!user && window.adminSessionActive) {
+      window.adminSessionActive = false;
+      const panel = document.getElementById("adminPanel");
+      if (panel) panel.style.display = "none";
+    }
+  });
+} catch (error) {
+  console.error("Firebase initialization error:", error);
+  window.firebaseReady = Promise.reject(error);
+}
+</script>
+
+<script>
+/* =========================================================
+   OBA REAL ESTATE — MAIN JAVASCRIPT
+   Uses separate Firestore collections so furniture data is not shown.
+========================================================= */
+
+const DEFAULT_CATEGORIES = ["rent","uncompleted buildings","for sale"];
+const CATEGORY_COLLECTION = "oba_categories";
+const PROPERTY_COLLECTION = "oba_properties";
+const HOME_SETTINGS_COLLECTION = "oba_home_settings";
+const WELCOME_VIDEO_DOC = "welcome_video";
+const WHATSAPP_NUMBER = "2348030809200";
+const CLOUD_NAME = "hjdnytcb";
+const UPLOAD_PRESET = "Obaestate";
+
+let categories=[];
+let properties=[];
+let uploadedImages=[];
+let uploadedVideos=[];
+let propertyLatitude=null;
+let propertyLongitude=null;
+let propertyLocationAccuracy=null;
+const WELCOME_VIDEO_SRC = "welcome-video.mp4";
+let adminPanel,aName,aCategory,aPrice,aLocation,aDescription,delCat,delList;
+window.adminSessionActive = false;
+
+const safeType = type => String(type||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+
+window.addEventListener("DOMContentLoaded", async ()=>{
+  adminPanel=document.getElementById("adminPanel");
+  aName=document.getElementById("aName");
+  aCategory=document.getElementById("aCategory");
+  aPrice=document.getElementById("aPrice");
+  aLocation=document.getElementById("aLocation");
+  aDescription=document.getElementById("aDescription");
+  delCat=document.getElementById("delCat");
+  delList=document.getElementById("delList");
+  try{
+    await window.firebaseReady;
+    await loadCategoriesFromFirebase();
+    await loadPropertiesFromFirebase();
+    renderWelcomeVideo();
+    loadCategories();
+    restoreActiveView();
+  }catch(error){
+    console.error("OBA loading error:",error);
+  }
+});
+
+async function seedDefaultCategories(){
+  // Defaults are created only after an authenticated admin is signed in.
+  if(!window.firebaseAdminUser) return;
+  const snap=await fb.getDocs(fb.collection(db,CATEGORY_COLLECTION));
+  const existing=snap.docs.map(d=>String(d.data().name||"").trim().toLowerCase());
+  for(const name of DEFAULT_CATEGORIES){
+    if(!existing.includes(name)){
+      await fb.addDoc(fb.collection(db,CATEGORY_COLLECTION),{name,createdAt:Date.now()});
+    }
+  }
+}
+
+async function loadCategoriesFromFirebase(){
+  await window.firebaseReady;
+  categories=[];
+  const snap=await fb.getDocs(fb.collection(db,CATEGORY_COLLECTION));
+  snap.forEach(d=>{
+    const name=String(d.data().name||"").trim().toLowerCase();
+    if(name && !categories.includes(name)) categories.push(name);
+  });
+
+  // If the database is empty, show the three built-in categories without
+  // requiring a public visitor to have write permission.
+  if(categories.length===0){
+    categories=[...DEFAULT_CATEGORIES];
+  }
+
+  categories.sort((a,b)=>{
+    const ai=DEFAULT_CATEGORIES.indexOf(a), bi=DEFAULT_CATEGORIES.indexOf(b);
+    if(ai!==-1 && bi!==-1) return ai-bi;
+    if(ai!==-1) return -1;
+    if(bi!==-1) return 1;
+    return a.localeCompare(b);
+  });
+  fillCategorySelects();
+}
+
+function fillCategorySelects(){
+  const html=categories.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c.toUpperCase())}</option>`).join("");
+  if(aCategory) aCategory.innerHTML=html;
+  if(delCat) delCat.innerHTML=html;
+  const catDelete=document.getElementById("catDelete");
+  if(catDelete) catDelete.innerHTML=html;
+  loadDelete();
+}
+
+async function addCategory(){
+  const input=document.getElementById("newCat");
+  const name=input.value.trim().toLowerCase();
+  if(!name){alert("Please enter a category name.");return;}
+
+  if(!window.firebaseAdminUser || !window.adminSessionActive){
+    alert("Please login as admin first.");
+    openAdmin();
+    return;
+  }
+
+  if(categories.includes(name)){alert("This category already exists.");return;}
+
+  const button=document.querySelector('button[onclick="addCategory()"]');
+  if(button){button.disabled=true;button.textContent="Adding...";}
+
+  try{
+    await window.firebaseReady;
+
+    // Write the category using the same Firestore instance used everywhere
+    // else in the admin panel.
+    const ref = await fb.addDoc(
+      fb.collection(db, CATEGORY_COLLECTION),
+      {
+        name,
+        createdAt: Date.now(),
+        createdBy: window.firebaseAdminUser.uid
+      }
+    );
+
+    if(!ref || !ref.id) throw new Error("Firestore did not return a category ID.");
+
+    input.value="";
+    await loadCategoriesFromFirebase();
+    loadCategories();
+    fillCategorySelects();
+    alert("Category added successfully ✅");
+  }catch(error){
+    console.error("Add category error:",error);
+    alert("Failed to add category ❌\n\n"+(error.code||"unknown-error")+"\n"+(error.message||"Please check your Firebase Firestore rules and try again."));
+  }finally{
+    if(button){button.disabled=false;button.textContent="Add Category";}
+  }
+}
+
+async function deleteCategory(){
+  const cat=document.getElementById("catDelete").value;
+  if(!cat)return;
+  if(DEFAULT_CATEGORIES.includes(cat)){
+    alert("The three main OBA categories cannot be deleted.");
+    return;
+  }
+  const hasProperties=properties.some(p=>String(p.category||"").toLowerCase()===cat);
+  if(hasProperties){alert("This category contains properties. Delete or move those properties first.");return;}
+  try{
+    const snap=await fb.getDocs(fb.collection(db,CATEGORY_COLLECTION));
+    for(const d of snap.docs){
+      if(String(d.data().name||"").toLowerCase()===cat) await fb.deleteDoc(fb.doc(db,CATEGORY_COLLECTION,d.id));
+    }
+    await loadCategoriesFromFirebase();
+    loadCategories();
+    alert("Category deleted successfully ✅");
+  }catch(error){console.error(error);alert("Failed to delete category ❌");}
+}
+
+function loadCategories(){
+  const bar=document.getElementById("categoryBar");
+  if(!bar)return;
+  let html=`<div class="category-btn active" onclick="showView('home',this)">HOME</div>`;
+  categories.forEach(c=>{
+    html+=`<div class="category-btn" onclick="showView('${escapeJs(c)}',this)">${escapeHtml(c.toUpperCase())}</div>`;
+  });
+  bar.innerHTML=html;
+}
+
+function showView(type,el){
+  document.querySelectorAll(".category-btn").forEach(b=>b.classList.remove("active"));
+  if(el)el.classList.add("active");
+  localStorage.setItem("obaActiveView",type);
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active-view"));
+  if(type==="home"){
+    document.getElementById("homeView").classList.add("active-view");
+    return;
+  }
+  const safe=safeType(type);
+  let view=document.getElementById(safe+"View");
+  if(!view){
+    view=document.createElement("div");
+    view.id=safe+"View";
+    view.className="view";
+    document.body.appendChild(view);
+  }
+  renderCategory(type,view);
+  view.classList.add("active-view");
+}
+
+function googleMapsUrl(latitude,longitude){
+  const lat=Number(latitude), lng=Number(longitude);
+  if(!Number.isFinite(lat)||!Number.isFinite(lng)) return "#";
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(lat+","+lng)}`;
+}
+
+function renderCategory(type,view){
+  const list=properties.filter(p=>String(p.category||"").toLowerCase()===String(type).toLowerCase());
+  if(!list.length){
+    view.innerHTML=`<div class="card empty"><strong>${escapeHtml(type.toUpperCase())}</strong>No properties uploaded yet.</div>`;
+    return;
+  }
+  let html="";
+  list.forEach((p,i)=>{
+    const media=[...(Array.isArray(p.images)?p.images:[]),...(Array.isArray(p.videos)?p.videos:[])];
+    let mediaHtml="";
+    (p.images||[]).forEach(url=>{mediaHtml+=`<img src="${escapeAttr(url)}" loading="lazy" alt="${escapeAttr(p.name||'Property')}">`;});
+    (p.videos||[]).forEach(url=>{mediaHtml+=`<div class="video-container"><video src="${escapeAttr(url)}" muted playsinline loop preload="metadata"></video><button class="video-sound-btn" onclick="toggleVideoSound(this)">🔇</button></div>`;});
+    if(!mediaHtml) mediaHtml=`<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#111;color:#fff">No media available</div>`;
+    const carId=`car-${safeType(type)}-${i}`;
+    const dotsId=`dots-${safeType(type)}-${i}`;
+    html+=`<div class="card">
+      <div class="img-wrap">
+        <div class="new-badge">PROPERTY</div>
+        <div class="carousel" id="${carId}">${mediaHtml}</div>
+      </div>
+      <div class="dots" id="${dotsId}"></div>
+      <div class="property-price">${escapeHtml(p.price||"Price on request")}</div>
+      <div class="property-name">${escapeHtml(p.name||"Property")}</div>
+      ${p.location?`<div class="property-location">📍 ${escapeHtml(p.location)}</div>`:""}
+      ${p.description?`<div class="property-description">${escapeHtml(p.description)}</div>`:""}
+      ${Number.isFinite(Number(p.latitude)) && Number.isFinite(Number(p.longitude))
+        ? `<a class="map-btn" href="${googleMapsUrl(p.latitude,p.longitude)}" target="_blank" rel="noopener">📍 VIEW GOOGLE MAP</a>`
+        : ""}
+      <button class="contact-btn" onclick="contactNow(${i},'${escapeJs(type)}')"><span>💬</span> CONTACT NOW</button>
+    </div>`;
+  });
+  view.innerHTML=html;
+  list.forEach((p,i)=>{setupCarousel(type,i);const car=document.getElementById(`car-${safeType(type)}-${i}`);setupVideoAutoplay(car);});
+}
+
+function setupCarousel(type,i){
+  const c=document.getElementById(`car-${safeType(type)}-${i}`), box=document.getElementById(`dots-${safeType(type)}-${i}`);
+  if(!c||!box)return;
+  const media=c.children;
+  box.innerHTML="";
+  for(let x=0;x<media.length;x++){
+    const d=document.createElement("span");d.className="dot";if(x===0)d.classList.add("active");d.onclick=()=>c.scrollTo({left:c.clientWidth*x,behavior:"smooth"});box.appendChild(d);
+  }
+  const dots=box.querySelectorAll(".dot");
+  c.onscroll=()=>{if(!c.clientWidth)return;const index=Math.round(c.scrollLeft/c.clientWidth);dots.forEach(d=>d.classList.remove("active"));if(dots[index])dots[index].classList.add("active");};
+}
+
+function setupVideoAutoplay(carousel){
+  if(!carousel)return;
+  const videos=carousel.querySelectorAll("video");
+  if(!videos.length)return;
+  videos.forEach(v=>{v.muted=true;v.playsInline=true;v.setAttribute("muted","");v.setAttribute("playsinline","");v.setAttribute("webkit-playsinline","");});
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      const video=entry.target;
+      if(entry.isIntersecting&&entry.intersectionRatio>=.6){
+        document.querySelectorAll(".carousel video").forEach(v=>{if(v!==video){v.pause();v.currentTime=0;}});
+        video.muted=true;video.play().catch(()=>{});
+      }else video.pause();
+    });
+  },{threshold:[0,.6,1]});
+  videos.forEach(v=>observer.observe(v));
+}
+
+function toggleVideoSound(button){
+  const container=button?.closest(".video-container");if(!container)return;
+  const video=container.querySelector("video");if(!video)return;
+  if(video.muted){
+    document.querySelectorAll(".carousel video").forEach(v=>{if(v!==video)v.muted=true;});
+    document.querySelectorAll(".video-sound-btn").forEach(b=>{if(b!==button)b.textContent="🔇";});
+    video.muted=false;video.volume=1;button.textContent="🔊";video.play().catch(()=>{});
+  }else{video.muted=true;button.textContent="🔇";}
+}
+
+function contactNow(i,type){
+  const list=properties.filter(p=>String(p.category||"").toLowerCase()===String(type).toLowerCase());
+  const p=list[i];if(!p)return;
+  const msg=`Hello 👋,\n\nI am interested in this OBA REAL ESTATE property:\n\n🏠 Property: ${p.name||"N/A"}\n📂 Category: ${String(type).toUpperCase()}\n💰 Price: ${p.price||"Price on request"}\n📍 Location: ${p.location||"N/A"}\n\nPlease provide more information and let me know how I can arrange an inspection.`;
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,"_blank");
+}
+
+function uploadMedia(){
+  if(typeof cloudinary==="undefined"){alert("Upload tool not loaded. Refresh page.");return;}
+  uploadedImages=[];uploadedVideos=[];
+  cloudinary.openUploadWidget({cloudName:CLOUD_NAME,uploadPreset:UPLOAD_PRESET,sources:["local","camera"],multiple:true,resourceType:"auto",clientAllowedFormats:["jpg","jpeg","png","webp","mp4","mov","webm"]},(error,result)=>{
+    if(error){console.error(error);alert("Upload failed ❌");return;}
+    if(result&&result.event==="success"){
+      if(result.info.resource_type==="video")uploadedVideos.push(result.info.secure_url);else uploadedImages.push(result.info.secure_url);
+    }
+    if(result&&result.event==="close"){
+      const total=uploadedImages.length+uploadedVideos.length;if(total)alert(total+" property media file(s) uploaded successfully! ✅");
+    }
+  });
+}
+
+
+function renderWelcomeVideo(){
+  const area=document.getElementById("welcomeVideoArea");
+  if(!area)return;
+  area.innerHTML=`<video src="${escapeAttr(WELCOME_VIDEO_SRC)}" controls muted playsinline loop preload="metadata"></video>`;
+}
+
+function scanPropertyLocation(){
+  const status=document.getElementById("gpsStatus");
+  const button=document.getElementById("scanLocationBtn");
+
+  if(!navigator.geolocation){
+    if(status) status.textContent="GPS/location is not supported by this device or browser.";
+    return;
+  }
+
+  if(button){
+    button.disabled=true;
+    button.textContent="📍 Scanning...";
+  }
+  if(status) status.textContent="Please allow location access and wait for the GPS position...";
+
+  navigator.geolocation.getCurrentPosition(
+    position=>{
+      propertyLatitude=Number(position.coords.latitude.toFixed(7));
+      propertyLongitude=Number(position.coords.longitude.toFixed(7));
+      propertyLocationAccuracy=Number.isFinite(position.coords.accuracy)
+        ? Math.round(position.coords.accuracy)
+        : null;
+
+      if(status){
+        status.innerHTML=`Location saved: <strong>${propertyLatitude}, ${propertyLongitude}</strong>${propertyLocationAccuracy!==null ? `<br>Accuracy: approximately ${propertyLocationAccuracy} m` : ""}`;
+      }
+      if(button){
+        button.disabled=false;
+        button.textContent="📍 Re-scan Exact Location";
+      }
+    },
+    error=>{
+      propertyLatitude=null;
+      propertyLongitude=null;
+      propertyLocationAccuracy=null;
+
+      let message="Could not get the location.";
+      if(error.code===1) message="Location permission was denied. Allow location access and try again.";
+      else if(error.code===2) message="Location is unavailable. Make sure GPS/location is turned on.";
+      else if(error.code===3) message="Location request timed out. Move outdoors or to an area with better GPS signal and try again.";
+
+      if(status) status.textContent=message;
+      if(button){
+        button.disabled=false;
+        button.textContent="📍 Scan Exact Location";
+      }
+    },
+    {
+      enableHighAccuracy:true,
+      timeout:20000,
+      maximumAge:0
+    }
+  );
+}
+
+async function addProperty(){
+  const name=aName.value.trim(), category=aCategory.value.trim().toLowerCase(), price=aPrice.value.trim(), location=aLocation.value.trim(), description=aDescription.value.trim();
+  if(!name){alert("Please enter the property name/title.");return;}
+  if(!category){alert("Please select a category.");return;}
+  if(uploadedImages.length===0&&uploadedVideos.length===0){alert("Upload at least one property image or video first 📷🎥");return;}
+  const newProperty={
+    name,
+    category,
+    price,
+    location,
+    description,
+    images:[...uploadedImages],
+    videos:[...uploadedVideos],
+    latitude:propertyLatitude,
+    longitude:propertyLongitude,
+    locationAccuracy:propertyLocationAccuracy,
+    date:Date.now()
+  };
+  try{
+    await fb.addDoc(fb.collection(db,PROPERTY_COLLECTION),newProperty);
+    uploadedImages=[];uploadedVideos=[];propertyLatitude=null;propertyLongitude=null;propertyLocationAccuracy=null;
+    aName.value="";aPrice.value="";aLocation.value="";aDescription.value="";
+    const gpsStatus=document.getElementById("gpsStatus");if(gpsStatus)gpsStatus.textContent="Not scanned yet.";
+    const gpsButton=document.getElementById("scanLocationBtn");if(gpsButton){gpsButton.disabled=false;gpsButton.textContent="📍 Scan Exact Location";}
+    alert("Property saved successfully ✅");
+    await loadPropertiesFromFirebase();
+    const active=localStorage.getItem("obaActiveView")||"home";
+    if(active!=="home")showView(active,null);
+  }catch(error){console.error(error);alert("Failed to save property ❌");}
+}
+
+async function loadPropertiesFromFirebase(){
+  properties=[];
+  const snap=await fb.getDocs(fb.collection(db,PROPERTY_COLLECTION));
+  snap.forEach(d=>properties.push({id:d.id,...d.data()}));
+  properties.sort((a,b)=>(b.date||0)-(a.date||0));
+  loadDelete();
+}
+
+function loadDelete(){
+  if(!delCat||!delList)return;
+  const cat=delCat.value;
+  const filtered=properties.filter(p=>String(p.category||"").toLowerCase()===String(cat||"").toLowerCase());
+  delList.innerHTML=filtered.map((p,i)=>`<div class="admin-item"><div class="meta"><strong>${escapeHtml(p.name||"No title")}</strong><br>${escapeHtml(p.price||"Price on request")}<br>${escapeHtml(p.location||"")}</div><button class="delete-btn" onclick="delProperty(${i})">Delete</button></div>`).join("");
+}
+
+async function delProperty(i){
+  const cat=delCat.value;
+  const filtered=properties.filter(p=>String(p.category||"").toLowerCase()===String(cat||"").toLowerCase());
+  const p=filtered[i];if(!p)return;
+  if(!confirm(`Delete this property?\n\n${p.name||"Property"}`))return;
+  try{await fb.deleteDoc(fb.doc(db,PROPERTY_COLLECTION,p.id));await loadPropertiesFromFirebase();loadDelete();const active=localStorage.getItem("obaActiveView");if(active&&active!=="home")showView(active,null);}catch(error){console.error(error);alert("Could not delete property ❌");}
+}
+
+function setLoginMessage(message){
+  const el=document.getElementById("adminLoginMessage");
+  if(el) el.textContent=message||"";
+}
+
+function openAdmin(){
+  const modal=document.getElementById("adminLoginModal");
+  if(!modal)return;
+
+  // Always require the explicit admin-login action.
+  window.adminSessionActive = false;
+  if(adminPanel) adminPanel.style.display="none";
+
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden","false");
+  setLoginMessage("");
+  const email=document.getElementById("adminEmail");
+  const password=document.getElementById("adminPassword");
+  if(email) email.value="";
+  if(password) password.value="";
+  setTimeout(()=>email?.focus(),50);
+}
+
+function closeAdminLogin(){
+  const modal=document.getElementById("adminLoginModal");
+  if(!modal)return;
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden","true");
+}
+
+async function handleAdminLogin(event){
+  event.preventDefault();
+  const email=document.getElementById("adminEmail").value.trim();
+  const password=document.getElementById("adminPassword").value;
+  const submit=document.getElementById("adminLoginSubmit");
+
+  if(!email||!password){
+    setLoginMessage("Enter your admin email and password.");
+    return;
+  }
+
+  submit.disabled=true;
+  submit.textContent="LOGGING IN...";
+  setLoginMessage("");
+
+  try{
+    await window.firebaseReady;
+    await window.firebaseSignIn(window.auth,email,password);
+
+    // Credentials are valid: explicitly unlock the admin area.
+    window.adminSessionActive = true;
+    closeAdminLogin();
+    await showAdminAfterAuth();
+  }catch(error){
+    console.error("Firebase login error:",error);
+    setLoginMessage((error.code||"login-error")+": "+(error.message||"Login failed."));
+  }finally{
+    submit.disabled=false;
+    submit.textContent="LOGIN";
+  }
+}
+
+async function forgotAdminPassword(){
+  const email=document.getElementById("adminEmail").value.trim();
+  if(!email){
+    setLoginMessage("Enter your admin email first, then tap Forgot password.");
+    return;
+  }
+  try{
+    await window.firebaseReady;
+    await window.firebasePasswordReset(window.auth,email);
+    setLoginMessage("Password reset email sent. Check your email.");
+  }catch(error){
+    console.error("Password reset error:",error);
+    setLoginMessage((error.code||"reset-error")+": "+(error.message||"Could not send reset email."));
+  }
+}
+
+async function showAdminAfterAuth(){
+  if(!window.firebaseAdminUser || !window.adminSessionActive) return;
+  adminPanel.style.display="flex";
+  await loadCategoriesFromFirebase();
+  await seedDefaultCategories();
+  await loadCategoriesFromFirebase();
+  await loadPropertiesFromFirebase();
+  renderAdminWelcomePreview(welcomeVideoUrl);
+  fillCategorySelects();
+  loadDelete();
+}
+
+async function logoutAdmin(){
+  window.adminSessionActive = false;
+  try{await window.firebaseSignOut(window.auth);}
+  catch(e){console.error(e);}
+  adminPanel.style.display="none";
+  closeAdminLogin();
+  alert("Logged out");
+}
+
+function restoreActiveView(){
+  const saved=localStorage.getItem("obaActiveView")||"home";
+  const buttons=document.querySelectorAll(".category-btn");
+  if(saved==="home"){showView("home",buttons[0]);return;}
+  let target=null;
+  buttons.forEach(btn=>{if(btn.innerText.trim().toLowerCase()===saved.toLowerCase())target=btn;});
+  if(target)showView(saved,target);else{localStorage.setItem("obaActiveView","home");showView("home",buttons[0]);}
+}
+
+function escapeHtml(value){return String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c]));}
+function escapeAttr(value){return escapeHtml(value);}
+function escapeJs(value){return String(value??"").replace(/\\/g,"\\\\").replace(/'/g,"\\'");}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  // Hidden admin access: tap/click the OBA logo 7 times consecutively.
+  // The counter resets if there is more than 2 seconds between taps.
+  const logo = document.getElementById("obaLogo");
+  let logoClickCount = 0;
+  let logoClickTimer = null;
+
+  logo?.addEventListener("click",()=>{
+    logoClickCount++;
+    clearTimeout(logoClickTimer);
+    logoClickTimer = setTimeout(()=>{ logoClickCount = 0; },2000);
+
+    if(logoClickCount >= 7){
+      logoClickCount = 0;
+      clearTimeout(logoClickTimer);
+      openAdmin();
+    }
+  });
+
+  document.getElementById("closeAdminLogin")?.addEventListener("click",closeAdminLogin);
+  document.getElementById("adminLoginForm")?.addEventListener("submit",handleAdminLogin);
+  document.getElementById("forgotAdminPassword")?.addEventListener("click",forgotAdminPassword);
+  document.getElementById("toggleAdminPassword")?.addEventListener("click",()=>{
+    const input=document.getElementById("adminPassword");
+    const btn=document.getElementById("toggleAdminPassword");
+    if(input.type==="password"){input.type="text";btn.textContent="Hide";}
+    else{input.type="password";btn.textContent="Show";}
+  });
+  document.getElementById("adminLoginModal")?.addEventListener("click",e=>{
+    if(e.target.id==="adminLoginModal")closeAdminLogin();
+  });
+});
+
+window.openAdmin=openAdmin;window.logoutAdmin=logoutAdmin;window.showAdminAfterAuth=showAdminAfterAuth;window.addCategory=addCategory;window.deleteCategory=deleteCategory;window.showView=showView;window.uploadMedia=uploadMedia;window.addProperty=addProperty;window.loadDelete=loadDelete;window.delProperty=delProperty;window.toggleVideoSound=toggleVideoSound;window.contactNow=contactNow;
+</script>
+</body>
+</html>
